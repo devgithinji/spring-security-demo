@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>OTP CODE</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            min-height: 100%;
+            background: antiquewhite;
+        }
+
+        img, span, input, p {
+            display: block;
+        }
+
+        .content {
+            padding: 30px 10px;
+        }
+
+        header {
+            font-size: 25px;
+        }
+
+        header, footer {
+            text-align: center;
+            padding: 10px 0;
+            background: lightskyblue;
+            color: black;
+        }
+
+        footer {
+            font-size: 15px;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    OTP Code
+</header>
+<div class="content">
+    <h3 th:text="'Hello '+${name}"></h3>
+    <p>Please use the OTP code below:</p>
+    <h3 th:text="${code}"></h3>
+    <p>code expires in 5 minutes</p>
+</div>
+<footer>
+    <p>if you didn't request for this email please ignore</p>
+    <span> &copy; Security App</span>
+</footer>
+</body>
+</html>
