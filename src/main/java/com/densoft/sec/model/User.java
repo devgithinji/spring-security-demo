@@ -21,16 +21,17 @@ public class User implements UserDetails {
     private String name;
     private String email;
     private String password;
-
     private String role;
-    @Column(columnDefinition = "tinyint(1) default 1")
-    private boolean is_2fa_enabled;
-
-    @Column(name = "2fa_code")
-    private String code;
-
-    @Column(name = "2fa_expire_time")
-    private String expire_time;
+    @Column(nullable = false, columnDefinition = "tinyint(1) default 1", name = "otp_code_verified")
+    private boolean otpCodeVerified;
+    @Column(name = "otp_code")
+    private String otpCode;
+    @Column(name = "otp_expire_time")
+    private String otpExpireTime;
+    @Column(name = "password_reset_code")
+    private String passwordResetCode;
+    @Column(name = "password_reset_code_expire_time")
+    private String passwordResetCodeExpireTime;
 
     public User(String name, String email, String password, String role) {
         this.name = name;
@@ -56,7 +57,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override

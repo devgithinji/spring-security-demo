@@ -1,5 +1,6 @@
 package com.densoft.sec.service;
 
+import com.densoft.sec.errorhandling.APIException;
 import com.densoft.sec.model.User;
 import com.densoft.sec.repository.UserRepo;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,11 +19,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepo.findUserByEmail(username).orElseThrow(() -> new UsernameNotFoundException("no user found"));
+        return getExistingUser(username);
     }
-
     @Override
     public User getUser(String email) {
-        return userRepo.findUserByEmail(email).orElseThrow(() -> new UsernameNotFoundException("no user found"));
+        return getExistingUser(email);
+    }
+
+    private User getExistingUser(String username) {
+        return userRepo.findUserByEmail(username).orElseThrow(() -> new APIException("no user found with email: " + username));
     }
 }

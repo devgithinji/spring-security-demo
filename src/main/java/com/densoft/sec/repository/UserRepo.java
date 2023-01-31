@@ -12,10 +12,10 @@ import java.util.Optional;
 public interface UserRepo extends JpaRepository<User, Long> {
     Optional<User> findUserByEmail(String email);
 
-    Optional<User> findUserByEmailAndCode(String email, String code);
+    Optional<User> findUserByEmailAndOtpCode(String email, String otpCode);
 
     @Modifying
     @Transactional
-    @Query("UPDATE User u SET u.code = :code, u.expire_time = :expirationDate WHERE u.email = :email")
-    int update2faProperties(@Param("code") String code, @Param("expirationDate") String expirationDate, @Param("email") String email);
+    @Query("UPDATE User u SET u.otpCode = :otpCode, u.otpExpireTime = :expirationDate WHERE u.email = :email")
+    int update2faProperties(@Param("otpCode") String otpCode, @Param("expirationDate") String expirationDate, @Param("email") String email);
 }

@@ -1,14 +1,8 @@
 package com.densoft.sec.controllers;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.densoft.sec.errorhandling.APIException;
-import com.densoft.sec.model.User;
-import com.densoft.sec.repository.UserRepo;
-import com.densoft.sec.security.SecurityUtil;
+import com.densoft.sec.DTO.ResetPasswordReq;
+import com.densoft.sec.DTO.VerifyOTPReq;
 import com.densoft.sec.service.AuthService;
-import com.densoft.sec.service.EmailService;
-import com.densoft.sec.service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,15 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Random;
-
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/api")
@@ -50,9 +38,21 @@ public class AuthController {
         return new ResponseEntity<>(Map.of("message", "check your email"), HttpStatus.OK);
     }
 
-    @PostMapping("/email/{email_id}/code/{code}")
-    public ResponseEntity<Object> verify2faCode(@PathVariable("email_id") String email, @PathVariable("code") String code) {
-//        User user = userRepo.findUserByEmailAndCode(email, code).orElseThrow(() -> new RuntimeException("invalid code"));
-        return null;
+    @PostMapping("/otp/verify")
+    public ResponseEntity<?> verifyOTPCode(@RequestBody VerifyOTPReq otpReq) {
+        authService.verifyOTPCode(otpReq);
+        return new ResponseEntity<>(Map.of("message", "OTP code verified"), HttpStatus.OK);
+    }
+
+    @PostMapping("/password-reset/request/{email}")
+    public ResponseEntity<?> passwordResetRequest(@PathVariable("email") String email) throws MessagingException, UnsupportedEncodingException {
+        authService.passwordResetReq(email);
+        return new ResponseEntity<>(Map.of("message", "Password reset code sent to email"), HttpStatus.OK);
+    }
+
+    @PostMapping("/password-reset")
+    public ResponseEntity<?> passwordResetRequest(@RequestBody ResetPasswordReq resetPasswordReq) {
+        authService.passwordReset(resetPasswordReq.getEmail(), resetPasswordReq.getPassword(), resetPasswordReq.getCode());
+        return new ResponseEntity<>(Map.of("message", "Password reset successfully"), HttpStatus.OK);
     }
 }
